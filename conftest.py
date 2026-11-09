@@ -1,7 +1,6 @@
 import pytest
-import random
 import requests
-from helpers import delete_user, get_ingredients, register_and_get_auth_token
+from helpers import delete_user, register_and_get_auth_token, get_token
 from generators import create_new_user
 from data import URLS, ENDPOINTS
 
@@ -29,17 +28,13 @@ def get_user_headers_and_auto_delete():
    if token:
       delete_user(token)
 
-# Фикстура возвращает тело запроса для создания заказа с хэшем ингридиента(ов) 
+# Фикстура для тестов регистрации - удаляет пользователя после теста
 @pytest.fixture
-def get_payload():
-   ingredients_data = get_ingredients()
-   max_ingredients = len(ingredients_data['data']) - 1
+def auto_delete_created_user():
+   user_data = {}  
+   yield user_data
 
-   def _generate_payload(*indices):
-      if not indices:
-         random_index = random.randint(0, max_ingredients)
-         indices = [random_index]
-
-      ing_ids = [ingredients_data['data'][ind]['_id'] for ind in indices]
-      return {"ingredients": [ing_ids]}
-   return _generate_payload
+   if "email" in user_data and "password" in user_data:
+      token = get_token(user_data["email"], user_data["password"])
+      if token:
+         delete_user(token)

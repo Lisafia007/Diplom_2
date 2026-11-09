@@ -1,1 +1,0 @@
-{"uuid": "2c3abd41-a32e-461a-9bd9-261c0c891bd1", "children": ["a9d39c17-04c4-4e8a-bdd5-ff800a6ef984"], "befores": [{"name": "get_ing_by_ind", "status": "passed", "start": 1793694876603, "stop": 1793694876756}], "afters": [{"name": "get_ing_by_ind::<lambda>", "start": 1793694876894}], "start": 1793694876603, "stop": 1793694876894}

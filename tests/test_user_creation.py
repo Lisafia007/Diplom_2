@@ -8,8 +8,11 @@ class TestUserCreation:
 
    @allure.title("Проверка успешного создания уникального пользователя")   
    @allure.description("Создаём пользователя с уникальными данными")
-   def test_create_user(self):
+   def test_create_user(self, auto_delete_created_user):
       payload = create_new_user()
+
+      auto_delete_created_user["email"] = payload["email"]
+      auto_delete_created_user["password"] = payload["password"]
 
       with allure.step("Отправка POST-запроса на создание уникального пользователя"):
          response = requests.post(f'{URLS.BASE_URL}{ENDPOINTS.ENDPOINT_CREATE_USER}', data=payload)
@@ -33,8 +36,8 @@ class TestUserCreation:
    @allure.title("Проверка создания пользователя без заполнения одного из обязательных полей")   
    @allure.description("Создаём пользователя с отсутствием одного из обязательных полей")
    @pytest.mark.parametrize("missing_field", ["email", "password", "name"])
-   def test_create_user_without_required_fields(self, missing_field):
-      payload = create_new_user()
+   def test_create_user_without_required_fields(self, missing_field, register_and_auto_delete):
+      payload = register_and_auto_delete
 
       del payload[missing_field]
 
